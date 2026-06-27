@@ -1,0 +1,881 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RoK Alliance Command Structure — Kingdom 4054</title>
+<style>
+  :root {
+    --bg: #0d0f14;
+    --surface: #13161e;
+    --surface2: #1a1e2a;
+    --border: #252a38;
+    --gold: #c9a84c;
+    --gold-dim: #7a6230;
+    --red: #b84040;
+    --red-dim: #6b2828;
+    --green: #3a8c5c;
+    --blue: #3a6fa8;
+    --blue-dim: #2a4f78;
+    --text: #d8dce8;
+    --text-dim: #6e7590;
+    --text-label: #8892b0;
+    --accent: #c9a84c;
+    --rank-r5: #e8c85a;
+    --rank-r4: #a0bde8;
+    --rank-r3: #7ac892;
+    --rank-r2: #b8b8c8;
+    --rank-r1: #6e7590;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    font-size: 14px;
+    line-height: 1.6;
+    min-height: 100vh;
+  }
+  /* HEADER */
+  header {
+    background: linear-gradient(135deg, #0d0f14 0%, #1a1020 50%, #0d0f14 100%);
+    border-bottom: 1px solid var(--gold-dim);
+    padding: 32px 40px 24px;
+    position: relative;
+    overflow: hidden;
+  }
+  header::before {
+    content: '⚔';
+    position: absolute;
+    right: 40px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 80px;
+    opacity: 0.06;
+    pointer-events: none;
+  }
+  .header-kicker {
+    font-size: 11px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 8px;
+  }
+  header h1 {
+    font-size: 26px;
+    font-weight: 700;
+    color: #fff;
+    letter-spacing: 0.5px;
+  }
+  header h1 span { color: var(--gold); }
+  .header-sub {
+    margin-top: 6px;
+    font-size: 13px;
+    color: var(--text-dim);
+  }
+  /* NAV TABS */
+  nav {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 0 40px;
+    display: flex;
+    gap: 4px;
+    overflow-x: auto;
+  }
+  .tab {
+    padding: 12px 18px;
+    cursor: pointer;
+    font-size: 13px;
+    color: var(--text-dim);
+    border-bottom: 2px solid transparent;
+    white-space: nowrap;
+    transition: color 0.15s, border-color 0.15s;
+    user-select: none;
+  }
+  .tab:hover { color: var(--text); }
+  .tab.active { color: var(--gold); border-bottom-color: var(--gold); }
+  /* MAIN */
+  main { padding: 32px 40px; max-width: 1100px; }
+  .section { display: none; }
+  .section.active { display: block; }
+  /* SECTION HEADER */
+  .section-title {
+    font-size: 18px;
+    font-weight: 600;
+    color: #fff;
+    margin-bottom: 4px;
+  }
+  .section-desc {
+    font-size: 13px;
+    color: var(--text-dim);
+    margin-bottom: 24px;
+  }
+  /* CARDS / GRIDS */
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; }
+  @media(max-width: 720px) {
+    .grid-2, .grid-3 { grid-template-columns: 1fr; }
+    main, nav { padding-left: 16px; padding-right: 16px; }
+    header { padding: 20px 16px 16px; }
+  }
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 18px;
+  }
+  .card-title {
+    font-size: 13px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 12px;
+  }
+  /* RANK BADGES */
+  .badge {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1px;
+  }
+  .badge-r5 { background: rgba(232,200,90,0.15); color: var(--rank-r5); border: 1px solid var(--rank-r5); }
+  .badge-r4 { background: rgba(160,189,232,0.12); color: var(--rank-r4); border: 1px solid var(--rank-r4); }
+  .badge-r3 { background: rgba(122,200,146,0.12); color: var(--rank-r3); border: 1px solid var(--rank-r3); }
+  .badge-r2 { background: rgba(184,184,200,0.1); color: var(--rank-r2); border: 1px solid var(--rank-r2); }
+  .badge-r1 { background: rgba(110,117,144,0.1); color: var(--rank-r1); border: 1px solid var(--rank-r1); }
+  /* ROLE TABLE */
+  .role-block {
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    margin-bottom: 16px;
+    overflow: hidden;
+  }
+  .role-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 18px;
+    background: var(--surface2);
+    border-bottom: 1px solid var(--border);
+  }
+  .role-title { font-weight: 600; font-size: 15px; }
+  .role-body { padding: 16px 18px; }
+  .duty-list { list-style: none; }
+  .duty-list li {
+    padding: 5px 0;
+    color: var(--text);
+    font-size: 13px;
+    display: flex;
+    gap: 8px;
+  }
+  .duty-list li::before { content: '›'; color: var(--gold); flex-shrink: 0; }
+  /* PILL TAG */
+  .pill {
+    display: inline-block;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 3px 10px;
+    font-size: 11px;
+    color: var(--text-dim);
+    margin: 3px 2px;
+  }
+  /* TIMEZONE TABLE */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+  }
+  th {
+    text-align: left;
+    padding: 8px 12px;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--text-dim);
+    border-bottom: 1px solid var(--border);
+    background: var(--surface2);
+  }
+  td {
+    padding: 10px 12px;
+    border-bottom: 1px solid var(--border);
+    color: var(--text);
+    vertical-align: top;
+  }
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: rgba(201,168,76,0.04); }
+  /* CALLOUT */
+  .callout {
+    border-left: 3px solid var(--gold);
+    background: rgba(201,168,76,0.07);
+    padding: 12px 16px;
+    border-radius: 0 6px 6px 0;
+    margin: 16px 0;
+    font-size: 13px;
+  }
+  .callout.warn {
+    border-left-color: var(--red);
+    background: rgba(184,64,64,0.07);
+  }
+  .callout.info {
+    border-left-color: var(--blue);
+    background: rgba(58,111,168,0.07);
+  }
+  /* TIMELINE / PHASE */
+  .phase-list { list-style: none; }
+  .phase-item {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 16px;
+    align-items: flex-start;
+  }
+  .phase-dot {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: var(--surface2);
+    border: 2px solid var(--gold-dim);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--gold);
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+  .phase-content strong {
+    display: block;
+    color: #fff;
+    font-size: 14px;
+    margin-bottom: 4px;
+  }
+  .phase-content p {
+    font-size: 13px;
+    color: var(--text-dim);
+  }
+  /* DISCORD CHANNEL LIST */
+  .channel-category {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: var(--text-dim);
+    padding: 10px 0 4px;
+    font-weight: 600;
+  }
+  .channel-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 12px;
+    border-radius: 4px;
+    font-size: 13px;
+    color: var(--text);
+    margin-bottom: 2px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+  }
+  .channel-item .ch-icon { color: var(--text-dim); font-size: 12px; width: 14px; text-align: center; }
+  .channel-item .ch-desc { margin-left: auto; font-size: 11px; color: var(--text-dim); }
+  /* DIVIDER */
+  hr { border: none; border-top: 1px solid var(--border); margin: 24px 0; }
+  /* CHECKLIST */
+  .checklist { list-style: none; }
+  .checklist li {
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+    padding: 6px 0;
+    font-size: 13px;
+    border-bottom: 1px solid var(--border);
+  }
+  .checklist li:last-child { border-bottom: none; }
+  .checklist li .ck-box {
+    width: 16px;
+    height: 16px;
+    border: 1px solid var(--gold-dim);
+    border-radius: 3px;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+  /* INLINE GOLD */
+  .gold { color: var(--gold); }
+  .dim { color: var(--text-dim); }
+  .white { color: #fff; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-kicker">Kingdom 4054 · Alliance Command Reference</div>
+  <h1>Alliance <span>Organization Template</span></h1>
+  <div class="header-sub">Roles · Ranks · Timezones · Events · Discord · KvK Readiness</div>
+</header>
+
+<nav>
+  <div class="tab active" onclick="showTab('ranks')">Ranks & Roles</div>
+  <div class="tab" onclick="showTab('officer')">Officer Duties</div>
+  <div class="tab" onclick="showTab('timezone')">Timezone Coverage</div>
+  <div class="tab" onclick="showTab('events')">Events Calendar</div>
+  <div class="tab" onclick="showTab('discord')">Discord Setup</div>
+  <div class="tab" onclick="showTab('kvk')">KvK Readiness</div>
+  <div class="tab" onclick="showTab('rules')">Alliance Rules</div>
+</nav>
+
+<main>
+
+<!-- ============ TAB: RANKS ============ -->
+<div class="section active" id="tab-ranks">
+  <div class="section-title">Rank & Role Structure</div>
+  <div class="section-desc">The game provides 5 ranks (R1–R5). Top alliances layer functional roles on top of these to define who owns what operationally.</div>
+
+  <div class="role-block">
+    <div class="role-header">
+      <span class="badge badge-r5">R5</span>
+      <span class="role-title">Alliance Leader</span>
+      <div style="margin-left:auto" class="pill">1 seat</div>
+    </div>
+    <div class="role-body">
+      <ul class="duty-list">
+        <li>Sole authority to edit alliance profile, appoint/demote officers, demolish buildings, and disband</li>
+        <li>Sets strategic direction — war targets, diplomacy decisions, KvK alignment</li>
+        <li>Final arbiter on member disputes and alliance policy</li>
+        <li>Maintains relationships with allied R5s and kingdom-level diplomats</li>
+        <li>Should designate a named Acting R5 for planned absences over 48 hours</li>
+      </ul>
+      <div class="callout warn" style="margin-top:12px">
+        <strong style="color:#e07070">Leadership Transfer Protocol:</strong> The R5 seat can be transferred in-game at any time. Top alliances establish a succession order — designate your #1 and #2 trusted R4s who would receive the seat in an emergency. Never leave the alliance without a human holding R5.
+      </div>
+    </div>
+  </div>
+
+  <div class="role-block">
+    <div class="role-header">
+      <span class="badge badge-r4">R4</span>
+      <span class="role-title">Officer (Cabinet)</span>
+      <div style="margin-left:auto" class="pill">4–8 seats</div>
+    </div>
+    <div class="role-body">
+      <p style="font-size:13px; color:var(--text-dim); margin-bottom:12px">R4s are the operational core. Each should own a functional domain below — avoid spreading any single R4 too thin.</p>
+      <div class="grid-2" style="margin-bottom:12px">
+        <div class="card">
+          <div class="card-title gold" style="font-size:11px">🗡 Warlord / War Officer</div>
+          <ul class="duty-list">
+            <li>Calls and leads rallies</li>
+            <li>Coordinates troop marches during Holy Site captures</li>
+            <li>Manages war phase messaging and rally timing</li>
+            <li>Tracks enemy power and flag positioning</li>
+          </ul>
+        </div>
+        <div class="card">
+          <div class="card-title gold" style="font-size:11px">📜 Counsellor / Ops Officer</div>
+          <ul class="duty-list">
+            <li>Manages tech donation drives</li>
+            <li>Schedules and cancels alliance events</li>
+            <li>Territory expansion — flags, fortress placement</li>
+            <li>Resource center rotation</li>
+          </ul>
+        </div>
+        <div class="card">
+          <div class="card-title gold" style="font-size:11px">🌐 Diplomat</div>
+          <ul class="duty-list">
+            <li>Maintains NAP list and ally contacts</li>
+            <li>Handles kingdom chat and inter-alliance comms</li>
+            <li>Manages family/sub-alliance coordination</li>
+            <li>Negotiates ceasefires and agreements</li>
+          </ul>
+        </div>
+        <div class="card">
+          <div class="card-title gold" style="font-size:11px">👥 Recruitment Officer</div>
+          <ul class="duty-list">
+            <li>Reviews and approves membership applications</li>
+            <li>Posts recruitment in kingdom chat and forums</li>
+            <li>Conducts power/activity vetting</li>
+            <li>Manages member probation and removal</li>
+          </ul>
+        </div>
+      </div>
+      <div class="callout info">
+        <strong>Game mechanic:</strong> R4 Warlord title gives +1% troop ATK/DEF. Counsellor title gives +1% research and build speed. Assign titles to match each officer's actual function.
+      </div>
+    </div>
+  </div>
+
+  <div class="role-block">
+    <div class="role-header">
+      <span class="badge badge-r3">R3</span>
+      <span class="role-title">Senior Member / Squad Lead</span>
+      <div style="margin-left:auto" class="pill">Unlimited</div>
+    </div>
+    <div class="role-body">
+      <ul class="duty-list">
+        <li>Trusted active players, battlefield leaders, and mentors to newer members</li>
+        <li>Can send alliance-wide messages — use sparingly and purposefully</li>
+        <li>No kick/promote privileges — escalate to R4 for personnel actions</li>
+        <li>Ideal for timezone leads who cover shifts R4s can't</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="role-block">
+    <div class="role-header">
+      <span class="badge badge-r2">R2</span>
+      <span class="role-title">Member</span>
+      <div style="margin-left:auto"></div>
+    </div>
+    <div class="role-body">
+      <ul class="duty-list">
+        <li>Standard alliance member — full chat, donation, event participation</li>
+        <li>Cannot send alliance-wide messages</li>
+        <li>Elevation to R3 is a merit-based recognition milestone</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="role-block">
+    <div class="role-header">
+      <span class="badge badge-r1">R1</span>
+      <span class="role-title">Recruit / Probationary</span>
+      <div style="margin-left:auto" class="pill">30-day window</div>
+    </div>
+    <div class="role-body">
+      <ul class="duty-list">
+        <li>New joins start here — observe activity and contribution before promoting</li>
+        <li>Can use alliance chat and help buttons but no broadcast capability</li>
+        <li>Promote to R2 after 2–4 weeks of consistent activity and tech donations</li>
+        <li>R1s inactive for 14+ days are candidates for removal (enforce consistently)</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- ============ TAB: OFFICER DUTIES ============ -->
+<div class="section" id="tab-officer">
+  <div class="section-title">Officer Duty Standards</div>
+  <div class="section-desc">What "being an R4" actually means day-to-day. These are baseline expectations — customize to your alliance's activity level.</div>
+
+  <div class="callout warn">
+    <strong style="color:#e07070">The #1 alliance killer:</strong> An R4 who is offline during every war phase. Before promoting anyone to officer, confirm their timezone and confirm they can be reachable during your critical windows (Holy Site defense, KvK war phases, fort rallies).
+  </div>
+
+  <hr>
+  <div style="font-size:15px; font-weight:600; color:#fff; margin-bottom:16px">Daily Baseline (All R4s)</div>
+  <ul class="checklist">
+    <li><div class="ck-box"></div>Log into the alliance at least once per day during active phases</li>
+    <li><div class="ck-box"></div>Donate to alliance tech on login (Development tree first, then War tree)</li>
+    <li><div class="ck-box"></div>Check Discord/comms for outstanding decisions or alerts</li>
+    <li><div class="ck-box"></div>Review member application queue if you are the Recruitment Officer</li>
+    <li><div class="ck-box"></div>Repair any burning flags or fortresses immediately upon login</li>
+    <li><div class="ck-box"></div>Post coverage notice in Discord if you'll be unavailable for 24+ hours</li>
+  </ul>
+
+  <hr>
+  <div style="font-size:15px; font-weight:600; color:#fff; margin-bottom:16px">War Officer Specific — During War Phases</div>
+  <ul class="checklist">
+    <li><div class="ck-box"></div>Post rally call in Discord with target coordinates, troop type, and march time</li>
+    <li><div class="ck-box"></div>Coordinate who is leading the rally (highest power commander)</li>
+    <li><div class="ck-box"></div>Confirm minimum troop fill before launching (establish your threshold, e.g., 70%)</li>
+    <li><div class="ck-box"></div>Post BVB/KvK march orders with clear "march time" so all timezones align</li>
+    <li><div class="ck-box"></div>Debrief after major engagements — what worked, what didn't</li>
+  </ul>
+
+  <hr>
+  <div style="font-size:15px; font-weight:600; color:#fff; margin-bottom:16px">Ops Officer Specific</div>
+  <ul class="checklist">
+    <li><div class="ck-box"></div>Keep resource center active and rotated weekly</li>
+    <li><div class="ck-box"></div>Schedule events (Barbarian Fort rallies, ARK, MGE windows) in advance</li>
+    <li><div class="ck-box"></div>Monitor flag chain integrity — check for gaps that make flags ineffective</li>
+    <li><div class="ck-box"></div>Maintain a territory expansion plan — don't build flags randomly</li>
+    <li><div class="ck-box"></div>Track tech donation leaders and give public recognition monthly</li>
+  </ul>
+
+  <hr>
+  <div style="font-size:15px; font-weight:600; color:#fff; margin-bottom:16px">R4 Succession & Rotation</div>
+  <div class="card">
+    <ul class="duty-list">
+      <li>Designate a primary and backup for each functional role — no single points of failure</li>
+      <li>R4s who are inactive for 7+ days without notice move to R3 temporarily</li>
+      <li>Re-evaluate R4 roster every KvK cycle — performance during war phases is the main criterion</li>
+      <li>R5 should hold a brief leadership debrief after every major event (KvK, Holy Site siege)</li>
+      <li>Avoid "legacy R4s" — officers who are promoted and never replaced even after going inactive</li>
+    </ul>
+  </div>
+</div>
+
+<!-- ============ TAB: TIMEZONE ============ -->
+<div class="section" id="tab-timezone">
+  <div class="section-title">Timezone Coverage Framework</div>
+  <div class="section-desc">The biggest tactical vulnerability most alliances have is coverage gaps. Map your officer team to shifts before you have a crisis.</div>
+
+  <div class="callout">
+    <strong class="gold">First step:</strong> Survey every R4 and R3 for their timezone and typical active hours. Build the shift map below with real names before KvK starts.
+  </div>
+
+  <div style="margin: 20px 0; overflow-x: auto;">
+    <table>
+      <thead>
+        <tr>
+          <th>Shift</th>
+          <th>UTC Window</th>
+          <th>Example Regions</th>
+          <th>Required Coverage</th>
+          <th>Assigned Officer(s)</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong class="gold">Alpha Shift</strong></td>
+          <td>00:00 – 06:00 UTC</td>
+          <td>East Asia, Oceania</td>
+          <td>1 R4 minimum online</td>
+          <td class="dim">[ Fill in ]</td>
+        </tr>
+        <tr>
+          <td><strong class="gold">Bravo Shift</strong></td>
+          <td>06:00 – 12:00 UTC</td>
+          <td>Europe, Middle East</td>
+          <td>1 R4 minimum online</td>
+          <td class="dim">[ Fill in ]</td>
+        </tr>
+        <tr>
+          <td><strong class="gold">Charlie Shift</strong></td>
+          <td>12:00 – 18:00 UTC</td>
+          <td>US East/Central (AM)</td>
+          <td>1–2 R4s online</td>
+          <td class="dim">[ Fill in ]</td>
+        </tr>
+        <tr>
+          <td><strong class="gold">Delta Shift</strong></td>
+          <td>18:00 – 24:00 UTC</td>
+          <td>US West / Americas</td>
+          <td>1–2 R4s online</td>
+          <td class="dim">[ Fill in ]</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="callout info">
+    <strong>US East reference:</strong> EST = UTC-5 / EDT = UTC-4. A 6:00 PM EDT event is 22:00 UTC. Your prime time (evening ET) falls in Delta Shift.
+  </div>
+
+  <hr>
+  <div style="font-size:15px; font-weight:600; color:#fff; margin-bottom:12px">Coverage Principles</div>
+  <ul class="duty-list" style="padding-left:4px">
+    <li>Schedule Holy Site captures and war marches during your highest-coverage window (Charlie or Delta for US-heavy alliances)</li>
+    <li>If you have zero R4s online during a shift, assign at least one R3 as "shift lead" with authority to call for help</li>
+    <li>Use Discord pings with timezone-specific roles (e.g., @EU-Online, @NA-Online) to reach the right people fast</li>
+    <li>Never schedule a flagship rally during a known dead zone — enemies will time attacks to hit you there</li>
+    <li>ARK (Alliance Resource Center) events should be announced 12+ hours ahead to reach all timezones</li>
+  </ul>
+
+  <hr>
+  <div style="font-size:15px; font-weight:600; color:#fff; margin-bottom:12px">Timezone Rotation for Event Scheduling</div>
+  <div class="card">
+    <p style="font-size:13px; color:var(--text-dim); margin-bottom:12px">For recurring events (ARK, fort rallies, donation drives), rotate the scheduled time across shifts monthly so no single region always gets the bad time slot. Example rotation:</p>
+    <div class="grid-3">
+      <div style="text-align:center; padding:12px; background:var(--surface2); border-radius:6px; border:1px solid var(--border)">
+        <div class="gold" style="font-size:12px; font-weight:700">WEEK 1–2</div>
+        <div style="font-size:13px; margin-top:4px">18:00 UTC<br><span class="dim">NA Prime Time</span></div>
+      </div>
+      <div style="text-align:center; padding:12px; background:var(--surface2); border-radius:6px; border:1px solid var(--border)">
+        <div class="gold" style="font-size:12px; font-weight:700">WEEK 3</div>
+        <div style="font-size:13px; margin-top:4px">08:00 UTC<br><span class="dim">EU Prime Time</span></div>
+      </div>
+      <div style="text-align:center; padding:12px; background:var(--surface2); border-radius:6px; border:1px solid var(--border)">
+        <div class="gold" style="font-size:12px; font-weight:700">WEEK 4</div>
+        <div style="font-size:13px; margin-top:4px">01:00 UTC<br><span class="dim">Asia/OCE Time</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ TAB: EVENTS ============ -->
+<div class="section" id="tab-events">
+  <div class="section-title">Events & Coordination Calendar</div>
+  <div class="section-desc">Key recurring event types and how top alliances structure them. Build your actual calendar in Discord or a shared doc.</div>
+
+  <div class="grid-2" style="margin-bottom:20px">
+    <div class="card">
+      <div class="card-title gold" style="font-size:11px">🏰 Barbarian Fort Rallies</div>
+      <ul class="duty-list">
+        <li><strong class="white">Level 10 forts</strong> are the optimal AP-to-Honor-Point trade — prioritize these</li>
+        <li>Schedule 2–3 times per week at consistent times so members can plan around them</li>
+        <li>War Officer announces target 30 min ahead with coordinates in Discord</li>
+        <li>Assign a secondary rally leader as backup in case primary is offline</li>
+        <li>Post "AP refill reminder" in chat before planned rally windows</li>
+      </ul>
+    </div>
+    <div class="card">
+      <div class="card-title gold" style="font-size:11px">⚡ MGE (More Than Gems)</div>
+      <ul class="duty-list">
+        <li>Coordinate with full alliance 48 hours before MGE opens</li>
+        <li>Announce which stages align with current kingdom objectives</li>
+        <li>Remind members to stockpile relevant resources/speedups before the event</li>
+        <li>Post a leaderboard update mid-event to motivate participation</li>
+      </ul>
+    </div>
+    <div class="card">
+      <div class="card-title gold" style="font-size:11px">🌾 ARK (Alliance Resource Center)</div>
+      <ul class="duty-list">
+        <li>Ops Officer rotates resource type weekly based on tech donation needs</li>
+        <li>Announce resource type switch 6+ hours before changeover</li>
+        <li>Announce open gather window — members queue gatherers immediately</li>
+        <li>Never leave ARK empty — always have the next type pre-planned</li>
+      </ul>
+    </div>
+    <div class="card">
+      <div class="card-title gold" style="font-size:11px">🏛 Holy Site Operations</div>
+      <ul class="duty-list">
+        <li>Never attempt to capture unplanned — brief the alliance in Discord first</li>
+        <li>Assign garrison commanders before the capture rally lands</li>
+        <li>Post "hold the site" messaging — everyone knows to reinforce, not recall</li>
+        <li>War Officer stays online for 2+ hours post-capture to manage counterattacks</li>
+      </ul>
+    </div>
+  </div>
+
+  <div style="font-size:15px; font-weight:600; color:#fff; margin-bottom:12px">Weekly Rhythm Template</div>
+  <table>
+    <thead>
+      <tr>
+        <th>Day</th>
+        <th>Standing Activity</th>
+        <th>Responsible</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Monday</strong></td>
+        <td>Tech donation drive reminder + weekly goals posted in Discord</td>
+        <td>Ops Officer</td>
+      </tr>
+      <tr>
+        <td><strong>Tuesday</strong></td>
+        <td>Barbarian Fort Rally #1</td>
+        <td>War Officer</td>
+      </tr>
+      <tr>
+        <td><strong>Wednesday</strong></td>
+        <td>Mid-week activity check — R1s flagged for inactivity review</td>
+        <td>Recruitment Officer</td>
+      </tr>
+      <tr>
+        <td><strong>Thursday</strong></td>
+        <td>Barbarian Fort Rally #2 + ARK resource rotation</td>
+        <td>War Officer / Ops Officer</td>
+      </tr>
+      <tr>
+        <td><strong>Friday</strong></td>
+        <td>Diplomatic update — any new NAPs, ally status changes posted</td>
+        <td>Diplomat</td>
+      </tr>
+      <tr>
+        <td><strong>Saturday</strong></td>
+        <td>Barbarian Fort Rally #3 (peak day) + optional community event</td>
+        <td>War Officer</td>
+      </tr>
+      <tr>
+        <td><strong>Sunday</strong></td>
+        <td>Weekly recap — power rankings, tech progress, standout members</td>
+        <td>R5 / Ops Officer</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- ============ TAB: DISCORD ============ -->
+<div class="section" id="tab-discord">
+  <div class="section-title">Discord Server Architecture</div>
+  <div class="section-desc">Recommended channel structure based on what competitive RoK kingdoms actually run. Adapt to your member count — don't over-build at first.</div>
+
+  <div class="grid-2">
+    <div>
+      <div class="channel-category">📌 Welcome & Rules</div>
+      <div class="channel-item"><span class="ch-icon">#</span> welcome <span class="ch-desc">First impressions</span></div>
+      <div class="channel-item"><span class="ch-icon">#</span> rules-and-expectations <span class="ch-desc">Lock it down</span></div>
+      <div class="channel-item"><span class="ch-icon">#</span> how-to-get-roles <span class="ch-desc">Self-assign TZ roles</span></div>
+      <div class="channel-item"><span class="ch-icon">#</span> roster-submit <span class="ch-desc">IGN, power, TZ</span></div>
+
+      <div class="channel-category">📣 Command</div>
+      <div class="channel-item"><span class="ch-icon">📢</span> announcements <span class="ch-desc">R4/R5 post only</span></div>
+      <div class="channel-item"><span class="ch-icon">⚔</span> war-orders <span class="ch-desc">Rally calls, march times</span></div>
+      <div class="channel-item"><span class="ch-icon">🏛</span> diplomacy-updates <span class="ch-desc">NAPs, allies, enemies</span></div>
+      <div class="channel-item"><span class="ch-icon">📅</span> events-schedule <span class="ch-desc">Calendar posts</span></div>
+
+      <div class="channel-category">💬 General</div>
+      <div class="channel-item"><span class="ch-icon">#</span> alliance-chat <span class="ch-desc">Day-to-day talk</span></div>
+      <div class="channel-item"><span class="ch-icon">#</span> game-tips <span class="ch-desc">Guides, builds, advice</span></div>
+      <div class="channel-item"><span class="ch-icon">#</span> commander-builds <span class="ch-desc">Talent trees, pairings</span></div>
+      <div class="channel-item"><span class="ch-icon">#</span> off-topic <span class="ch-desc">Keep it separate</span></div>
+    </div>
+    <div>
+      <div class="channel-category">🔒 Leadership (R4/R5 only)</div>
+      <div class="channel-item"><span class="ch-icon">#</span> officer-chat <span class="ch-desc">Private deliberation</span></div>
+      <div class="channel-item"><span class="ch-icon">#</span> member-review <span class="ch-desc">Kick/promote decisions</span></div>
+      <div class="channel-item"><span class="ch-icon">#</span> war-planning <span class="ch-desc">Pre-war strategy</span></div>
+      <div class="channel-item"><span class="ch-icon">#</span> kingdom-intel <span class="ch-desc">Enemy tracking</span></div>
+
+      <div class="channel-category">⚔ KvK Operations</div>
+      <div class="channel-item"><span class="ch-icon">🗺</span> kvk-briefing <span class="ch-desc">Phase-by-phase orders</span></div>
+      <div class="channel-item"><span class="ch-icon">📍</span> teleport-coords <span class="ch-desc">Rally point sharing</span></div>
+      <div class="channel-item"><span class="ch-icon">📊</span> score-tracking <span class="ch-desc">Real-time KvK points</span></div>
+      <div class="channel-item"><span class="ch-icon">🎙</span> war-voice <span class="ch-desc">Live comms during war</span></div>
+
+      <div class="channel-category">🤖 Bots & Utilities</div>
+      <div class="channel-item"><span class="ch-icon">#</span> bot-commands <span class="ch-desc">Keep spam here</span></div>
+      <div class="channel-item"><span class="ch-icon">🔔</span> activity-alerts <span class="ch-desc">Carl-bot / MEE6 log</span></div>
+    </div>
+  </div>
+
+  <hr>
+  <div style="font-size:15px; font-weight:600; color:#fff; margin-bottom:12px">Recommended Discord Roles (for Permissions + Pings)</div>
+  <div style="display:flex; flex-wrap:wrap; gap:8px; margin-bottom:12px">
+    <span class="badge badge-r5">R5 · Leader</span>
+    <span class="badge badge-r4">R4 · Officer</span>
+    <span class="badge badge-r3">R3 · Senior</span>
+    <span class="badge badge-r2">R2 · Member</span>
+    <span class="badge badge-r1">R1 · Recruit</span>
+    <span class="pill">@NA-Online</span>
+    <span class="pill">@EU-Online</span>
+    <span class="pill">@ASIA-Online</span>
+    <span class="pill">@OCE-Online</span>
+    <span class="pill">@War-Ready</span>
+    <span class="pill">@Farm-Account</span>
+    <span class="pill">@Cavalry-Focus</span>
+    <span class="pill">@Infantry-Focus</span>
+    <span class="pill">@Archer-Focus</span>
+  </div>
+  <div class="callout info">
+    Self-assignable timezone roles (@NA-Online, @EU-Online, etc.) are the fastest way to ping only the people who can actually respond at 2am. Set these up with Carl-bot or Reaction Roles on day one.
+  </div>
+</div>
+
+<!-- ============ TAB: KVK ============ -->
+<div class="section" id="tab-kvk">
+  <div class="section-title">KvK Readiness Framework</div>
+  <div class="section-desc">How competitive alliances prepare for Kingdom vs. Kingdom — the event that separates organized alliances from power numbers on a screen.</div>
+
+  <div class="callout warn">
+    <strong style="color:#e07070">The core truth:</strong> KvK is won by the most organized alliance, not the highest power. A 60-member alliance that executes together consistently beats a 90-member alliance doing 90 different things.
+  </div>
+
+  <hr>
+  <div style="font-size:15px; font-weight:600; color:#fff; margin-bottom:16px">Pre-KvK Preparation (4–6 Weeks Out)</div>
+  <ul class="phase-list">
+    <li class="phase-item">
+      <div class="phase-dot">1</div>
+      <div class="phase-content">
+        <strong>Power Audit</strong>
+        <p>Document each member's power, primary troop type (Cav/Inf/Arch), march capacity, and top commanders. Know your actual war capability before day one.</p>
+      </div>
+    </li>
+    <li class="phase-item">
+      <div class="phase-dot">2</div>
+      <div class="phase-content">
+        <strong>Tech Push</strong>
+        <p>All-hands donation drive to max out War tech tree nodes that affect troop ATK and rally capacity. This is the single highest ROI preparation activity.</p>
+      </div>
+    </li>
+    <li class="phase-item">
+      <div class="phase-dot">3</div>
+      <div class="phase-content">
+        <strong>Stockpile Teleports</strong>
+        <p>Every active war member needs Targeted Teleports stocked. The Alliance Shop should be draining teleports weekly. War is lost when players can't move to the fight.</p>
+      </div>
+    </li>
+    <li class="phase-item">
+      <div class="phase-dot">4</div>
+      <div class="phase-content">
+        <strong>Diplomatic Alignment</strong>
+        <p>Finalize NAP and ally list before KvK opens. Know who you fight with and who you don't touch. Ambiguity during war phases causes friendly fire incidents that break alliances.</p>
+      </div>
+    </li>
+    <li class="phase-item">
+      <div class="phase-dot">5</div>
+      <div class="phase-content">
+        <strong>War Officer Drills</strong>
+        <p>Run at least 2 coordinated fort rallies under real war conditions — timed march calls, Discord voice coordination, debrief. Drills expose gaps before they matter.</p>
+      </div>
+    </li>
+  </ul>
+
+  <hr>
+  <div style="font-size:15px; font-weight:600; color:#fff; margin-bottom:12px">During KvK — Operational Rules</div>
+  <table>
+    <thead>
+      <tr><th>Rule</th><th>Rationale</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>No solo attacks on designated targets</strong></td>
+        <td>Coordinated rallies hit harder and safer. Uncoordinated attacks give enemies time to reinforce.</td>
+      </tr>
+      <tr>
+        <td><strong>Shields up during offline hours</strong></td>
+        <td>High-power members who sleep with shields down become priority targets. Enforce this with an inactivity warning protocol.</td>
+      </tr>
+      <tr>
+        <td><strong>All march calls go through Discord</strong></td>
+        <td>In-game chat is chaotic during KvK. Discord war-orders channel is the command channel — if it's not there, it doesn't happen.</td>
+      </tr>
+      <tr>
+        <td><strong>Confirm troop counts before launch</strong></td>
+        <td>A rally launching at 40% fill is a losing rally. Establish and enforce a minimum fill threshold.</td>
+      </tr>
+      <tr>
+        <td><strong>No gathering during active war phases</strong></td>
+        <td>Gathered troops are exposed. War phase = troops inside your city or marching to a fight.</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- ============ TAB: RULES ============ -->
+<div class="section" id="tab-rules">
+  <div class="section-title">Alliance Rules Template</div>
+  <div class="section-desc">A starting point — customize for your alliance culture. Post in Discord #rules-and-expectations and in-game alliance description.</div>
+
+  <div class="callout">
+    Keep rules short, clear, and enforceable. A wall of 30 rules no one reads is worse than 8 rules everyone knows.
+  </div>
+
+  <div style="background:var(--surface); border:1px solid var(--border); border-radius:8px; padding:24px; margin-top:16px; font-size:13px; line-height:1.8">
+    <div style="color:var(--gold); font-size:11px; letter-spacing:2px; text-transform:uppercase; margin-bottom:12px">[ YOUR ALLIANCE NAME ] — Community Rules</div>
+
+    <p style="color:#fff; font-size:15px; margin-bottom:16px">Kingdom 4054 · Est. [ Date ]</p>
+
+    <p style="color:var(--text-dim); margin-bottom:20px">We are building one of the strongest alliances in Kingdom 4054. These rules exist to protect the investment every member makes in this alliance. They apply equally to all ranks.</p>
+
+    <ol style="padding-left:18px; color:var(--text)">
+      <li style="margin-bottom:12px"><strong class="white">Be active.</strong> Minimum login once every 48 hours during KvK, once every 5 days during peacetime. Members inactive for 7 days without notice will be removed to maintain alliance roster health.</li>
+      <li style="margin-bottom:12px"><strong class="white">Donate to tech on every login.</strong> Tech donations benefit everyone. It is the single lowest-effort, highest-impact action you take each day.</li>
+      <li style="margin-bottom:12px"><strong class="white">Honor all NAPs and ally designations.</strong> Do not attack, farm, or reinforce against alliances on our protected list. Violations are an immediate removal offense.</li>
+      <li style="margin-bottom:12px"><strong class="white">Follow war orders from War Officers and R5.</strong> During KvK and Holy Site operations, the march call in Discord is the command. No independent actions without leadership approval.</li>
+      <li style="margin-bottom:12px"><strong class="white">Use Discord.</strong> Critical communications happen in Discord. Not being on Discord during war phases is not an excuse for missing march calls or rally coordination.</li>
+      <li style="margin-bottom:12px"><strong class="white">No drama.</strong> Disputes go to R4 via DM, not in alliance chat. Public arguments, insults, or bad-faith behavior toward alliance members result in removal.</li>
+      <li style="margin-bottom:12px"><strong class="white">Flag placement requires approval.</strong> Do not build flags or fortresses without R4/R5 direction. Unauthorized expansion can trigger diplomatic incidents.</li>
+      <li style="margin-bottom:12px"><strong class="white">Farm accounts must be in designated farm alliances.</strong> No farm accounts in the main alliance roster. Use [ FARM ALLIANCE NAME ] for that purpose.</li>
+    </ol>
+
+    <div style="margin-top:20px; padding:12px; background:var(--surface2); border-radius:6px; border:1px solid var(--border)">
+      <div class="gold" style="font-size:12px; font-weight:700; margin-bottom:6px">ENFORCEMENT</div>
+      <p style="color:var(--text-dim)">First offense: Warning from R4 via Discord DM.<br>Second offense: Demotion to R1 / probationary status for 7 days.<br>Third offense or severe violations (NAP breaks, solo war attacks): Immediate removal.</p>
+    </div>
+  </div>
+</div>
+
+</main>
+
+<script>
+function showTab(id) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('tab-' + id).classList.add('active');
+  event.target.classList.add('active');
+}
+</script>
+</body>
+</html>
